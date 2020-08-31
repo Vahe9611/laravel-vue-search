@@ -83,18 +83,14 @@ export default {
     watch: {
         searchData: {
             handler (val) {
-                const data = this.normlizeData(val)
-
-                this.$emit('change', data)
+                this.$emit('change', this.normlizeData(val))
             },
             deep: true,
         },
     },
     methods: {
         handleSearch() {
-            const data = this.normlizeData(this.searchData)
-
-            this.$emit('change', data)
+            this.$emit('change', this.normlizeData(this.searchData))
         },
 
         normlizeData(data) {

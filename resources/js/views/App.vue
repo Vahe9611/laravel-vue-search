@@ -87,25 +87,41 @@ export default {
     methods: {
         async search (data) {
             try {
-                this.loading = true
+                this.setLoading(true);
 
-                const searchData = Object.keys(data).filter(key => data[key] !== 0).reduce((obj, key) => {
-                    obj[key] = data[key]
-                    return obj
-                }, {})
-
-                const r = await axios.get('/api/hotels/search', { params: searchData });
-
-                const newData = [...r.data.data]
-                this.data = newData
+                const response = await axios.get('/api/hotels/search', { params: this.normlizeSearchData(data) });
+                const newData = [...response.data.data]
+                this.setData(newData)
 
             } catch (error) {
                 console.log(error)
-                this.emptyText =error.response.data.message;
+                const { response: { data: { message } } } = error;
+                this.setEmptyTest(message);
             } finally {
-                this.loading = false
+                this.setLoading(false);
             }
         },
+
+        setLoading(value) {
+            this.loading = value;
+        },
+
+        setData(value) {
+            this.data = value;
+        },
+
+        setEmptyTest(value){
+            this.emptyText = value;
+        },
+
+        normlizeSearchData(data) {
+            return Object.keys(data)
+                        .filter(key => data[key] !== 0)
+                        .reduce((obj, key) => {
+                            obj[key] = data[key]
+                            return obj
+                        }, {})
+        }
     },
 }
 </script>
